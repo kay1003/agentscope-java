@@ -22,6 +22,7 @@ import io.agentscope.core.model.DashScopeChatModel;
 import io.agentscope.core.tool.Toolkit;
 import io.agentscope.core.tool.mcp.McpClientBuilder;
 import io.agentscope.core.tool.mcp.McpClientWrapper;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -105,10 +106,10 @@ public class McpToolExample {
     private static McpClientWrapper configureStdioMcp() throws Exception {
         System.out.println("\n--- StdIO Configuration ---\n");
 
-        System.out.print("Command (default: npx): ");
+        System.out.print("Command (default: cmd): ");
         String command = reader.readLine().trim();
         if (command.isEmpty()) {
-            command = "npx";
+            command = "cmd";
         }
 
         System.out.println("\nCommon MCP servers:");
@@ -122,16 +123,17 @@ public class McpToolExample {
 
         switch (serverChoice) {
             case "1":
-                System.out.print("Directory path (default: /tmp): ");
+                System.out.print("Directory path (default: D:\\Document): ");
                 String path = reader.readLine().trim();
                 if (path.isEmpty()) {
-                    path = "/tmp";
+                    path = "D:\\Document";
                 }
-                mcpArgs = new String[] {"-y", "@modelcontextprotocol/server-filesystem", path};
+                // Windows完整命令为: cmd /c npx -y  @modelcontextprotocol/server-filesystem
+                mcpArgs = new String[]{"/c", "npx" ,"-y", "@modelcontextprotocol/server-filesystem", path};
                 break;
 
             case "2":
-                mcpArgs = new String[] {"-y", "@modelcontextprotocol/server-git"};
+                mcpArgs = new String[]{"/c", "python" ,"-m", "mcp_server_git"};
                 break;
 
             default:
@@ -139,7 +141,7 @@ public class McpToolExample {
                 String argsStr = reader.readLine().trim();
                 if (argsStr.isEmpty()) {
                     mcpArgs =
-                            new String[] {"-y", "@modelcontextprotocol/server-filesystem", "/tmp"};
+                            new String[]{"/c", "npx" ,"-y", "12306-mcp"};
                 } else {
                     mcpArgs = argsStr.split(",");
                 }
